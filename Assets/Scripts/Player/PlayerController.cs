@@ -17,7 +17,6 @@ public class PlayerController
     public int KeysEquipped { get => playerScriptableObject.KeysEquipped; set => playerScriptableObject.KeysEquipped = value; }
     public PlayerState PlayerState { get => playerState; private set => playerState = value; }
 
-
     public PlayerController(PlayerView playerView, PlayerScriptableObject playerScriptableObject)
     {
         this.playerView = playerView;
