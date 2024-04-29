@@ -17,7 +17,6 @@ public class PlayerController
     public int KeysEquipped { get => playerScriptableObject.KeysEquipped; set => playerScriptableObject.KeysEquipped = value; }
     public PlayerState PlayerState { get => playerState; private set => playerState = value; }
 
-
     public PlayerController(PlayerView playerView, PlayerScriptableObject playerScriptableObject)
     {
         this.playerView = playerView;
@@ -25,13 +24,14 @@ public class PlayerController
         this.playerScriptableObject = playerScriptableObject;
         this.playerScriptableObject.KeysEquipped = 0;
         playerState = PlayerState.InDark;
-
         EventService.Instance.OnLightSwitchToggled.AddListener(onLightSwitch);
+        EventService.Instance.OnKeyPickedUp.AddListener(OnKeysPickedUp);
     }
 
     ~PlayerController()
     {
         EventService.Instance.OnLightSwitchToggled.RemoveListener(onLightSwitch);
+        EventService.Instance.OnKeyPickedUp.RemoveListener(OnKeysPickedUp);
     }
     public void Interact() => IsInteracted = Input.GetKeyDown(KeyCode.E) ? true : (Input.GetKeyUp(KeyCode.E) ? false : IsInteracted);
 
@@ -44,7 +44,6 @@ public class PlayerController
             playerRigidbody.AddForce(Vector3.up * playerScriptableObject.jumpForce, ForceMode.Impulse);
         }
     }
-
     public void Move(Rigidbody playerRigidbody, Transform transform)
     {
         GetInput();
@@ -56,7 +55,6 @@ public class PlayerController
         playerRigidbody.MoveRotation(rotation);
         playerRigidbody.MovePosition(position);
     }
-
     public void KillPlayer()
     {
         PlayerState = PlayerState.Dead;
@@ -77,12 +75,15 @@ public class PlayerController
         rotation = playerRigidbody.rotation * Quaternion.Euler(lookRotation);
         position = (transform.position) + (velocity * movement) * Time.fixedDeltaTime;
     }
-
     private void onLightSwitch()
     {
         if (PlayerState == PlayerState.InDark)
             PlayerState = PlayerState.None;
         else
             PlayerState = PlayerState.InDark;
+    }
+    private void OnKeysPickedUp(int keys)
+    {
+        KeysEquipped = keys;
     }
 }
