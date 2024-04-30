@@ -11,7 +11,7 @@ public class LightsOffByGhostEvent : MonoBehaviour
         {
             EventService.Instance.OnLightsOffByGhostEvent.InvokeEvent();
             GameService.Instance.GetSoundView().PlaySoundEffects(sound);
-            this.enabled = false;
+            this.gameObject.SetActive(false);
         }
     }
 }
